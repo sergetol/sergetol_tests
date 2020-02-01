@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+REPO_BRANCH="${repo_branch}"
+REPO_URL="${repo_url}"
+SCRIPT_TO_RUN="${script_to_run}"
+
+if [ "$REPO_BRANCH" == "" ]
+then
+  REPO_BRANCH="master"
+fi
+
+if [ "$REPO_URL" == "" ]
+then
+  echo "REPO_URL is empty! Nothing to clone"
+  exit 0
+fi
+
+rm -rf ./test
+git clone -b $REPO_BRANCH $REPO_URL ./test
+
+if [ "$SCRIPT_TO_RUN" == "" ]
+then
+  echo "SCRIPT_TO_RUN is empty! Nothing to run"
+  exit 0
+fi
+
+if [ ! -f ./$SCRIPT_TO_RUN ]
+then
+  echo "Script ./$SCRIPT_TO_RUN does not exist! Nothing to run"
+  exit 0
+fi
+
+cp -f ./$SCRIPT_TO_RUN ./test/$SCRIPT_TO_RUN
+cd ./test
+./$SCRIPT_TO_RUN
