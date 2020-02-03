@@ -19,11 +19,9 @@ then
 fi
 
 sudo apt-get update -qq > /dev/null
-sudo apt-get upgrade -y
-
-sudo apt-get install -y tree curl unzip python-pip
-sudo -H pip install --upgrade pip
-
+sudo apt-get upgrade -yqq > /dev/null
+sudo apt-get install -y tree curl unzip python-pip python-dev-all
+sudo -H pip install -q --upgrade pip
 python --version
 pip --version
 
@@ -36,25 +34,23 @@ ANSIBLE_LINT_VERSION=4.2.0
 mkdir _tmp
 cd _tmp
 
-whereis packer
-
 # Install packer
-curl -O https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
-  unzip -o packer_${PACKER_VERSION}_linux_amd64.zip && \
+curl -OsS https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+  unzip -oq packer_${PACKER_VERSION}_linux_amd64.zip && \
   rm -f packer_${PACKER_VERSION}_linux_amd64.zip && \
   sudo mv -f packer /usr/local/bin && \
   sudo chmod +x /usr/local/bin/packer
 
 # Install terraform
-curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-  unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+curl -OsS https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+  unzip -oq terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
   rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
   sudo mv -f terraform /usr/local/bin && \
   sudo chmod +x /usr/local/bin/terraform
 
 # Install tflint
-curl -OL https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip && \
-  unzip -o tflint_linux_amd64.zip && \
+curl -OLsS https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip && \
+  unzip -oq tflint_linux_amd64.zip && \
   rm -r tflint_linux_amd64.zip && \
   sudo mv -f tflint /usr/local/bin && \
   sudo chmod +x /usr/local/bin/tflint
@@ -63,7 +59,7 @@ cd ..
 rm -rf _tmp
 
 # Install ansible and ansible-lint
-sudo -H pip install ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
+sudo -H pip install -q ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
 
 echo -e "${DARKYELLOW}Version information:"
 echo -e "${CYAN}$(packer version)"
