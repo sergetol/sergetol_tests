@@ -20,7 +20,7 @@ fi
 
 sudo apt-get update -qq > /dev/null
 sudo apt-get upgrade -yqq > /dev/null
-sudo apt-get install -y tree curl unzip python-pip python-dev-all
+sudo apt-get install -yqq tree curl unzip python-pip > /dev/null
 sudo -H pip install -q --upgrade pip
 python --version
 pip --version
@@ -61,21 +61,22 @@ rm -rf _tmp
 # Install ansible and ansible-lint
 sudo -H pip install -q ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
 
+echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}Version information:"
 echo -e "${CYAN}$(packer version)"
 echo -e "${CYAN}$(terraform version)"
 echo -e "${CYAN}$(tflint --version)"
 echo -e "${CYAN}$(ansible --version)"
 echo -e "${CYAN}$(ansible-lint --version)"
-echo -e "${LIGHTGRAY}"
 
+echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}BRANCH: ${BRANCH}"
-echo -e "${LIGHTGRAY}"
 
+echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}$(pwd) directory tree:"
 echo -e "${CYAN}$(tree -d)"
-echo -e "${LIGHTGRAY}"
 
+echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}Running tests ..."
 echo -e "${LIGHTGRAY}"
 
