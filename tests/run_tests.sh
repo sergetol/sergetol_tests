@@ -7,16 +7,6 @@ DARKYELLOW="\033[0;33m"
 CYAN="\033[0;36m"
 LIGHTGRAY="\033[0;37m"
 
-python --version
-pip --version
-
-sudo apt-get update
-sudo apt-get install -y tree
-
-echo -e "${DARKYELLOW}$(pwd) directory tree:"
-echo -e "${CYAN}$(tree -d)"
-echo -e "${LIGHTGRAY}"
-
 BRANCH="${TRAVIS_BRANCH:-master}"
 BRANCH_TO_TEST="${BRANCH_TO_TEST:-master}"
 # debug:
@@ -28,9 +18,10 @@ then
   exit 0
 fi
 
+sudo apt-get update -qq > /dev/null
 sudo apt-get upgrade -y
 
-sudo apt-get install -y curl unzip python-pip
+sudo apt-get install -y tree curl unzip python-pip
 sudo -H pip install --upgrade pip
 
 python --version
@@ -74,8 +65,6 @@ rm -rf _tmp
 # Install ansible and ansible-lint
 sudo -H pip install ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
 
-echo "${DARKYELLOW}Installation complete"
-
 echo -e "${DARKYELLOW}Version information:"
 echo -e "${CYAN}$(packer version)"
 echo -e "${CYAN}$(terraform version)"
@@ -85,6 +74,10 @@ echo -e "${CYAN}$(ansible-lint --version)"
 echo -e "${LIGHTGRAY}"
 
 echo -e "${DARKYELLOW}BRANCH: ${BRANCH}"
+echo -e "${LIGHTGRAY}"
+
+echo -e "${DARKYELLOW}$(pwd) directory tree:"
+echo -e "${CYAN}$(tree -d)"
 echo -e "${LIGHTGRAY}"
 
 echo -e "${DARKYELLOW}Running tests ..."
