@@ -61,6 +61,10 @@ rm -rf _tmp
 # Install ansible and ansible-lint
 sudo -H pip install -q ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
 
+sudo rm -rf ansible/roles/jdauphant.nginx
+export ANSIBLE_DEPRECATION_WARNINGS=False
+export PYTHONWARNINGS="ignore::DeprecationWarning"
+
 echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}Version information:"
 echo -e "${CYAN}$(packer version)"
@@ -72,7 +76,6 @@ echo -e "${CYAN}$(ansible-lint --version)"
 echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}BRANCH: ${BRANCH}"
 
-rm -rf ansible/roles/jdauphant.nginx
 echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}$(pwd) directory tree:"
 echo -e "${CYAN}$(tree -d -I *otus*)"
@@ -208,8 +211,6 @@ else
   ((failed_tests_count++))
   echo -e "${RED}${test_result}${LIGHTGRAY}"
 fi
-
-ANSIBLE_DEPRECATION_WARNINGS=False
 
 # install external ansible roles
 ((all_tests_count++))
