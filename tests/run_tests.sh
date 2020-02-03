@@ -72,9 +72,10 @@ echo -e "${CYAN}$(ansible-lint --version)"
 echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}BRANCH: ${BRANCH}"
 
+rm -rf ansible/roles/jdauphant.nginx
 echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}$(pwd) directory tree:"
-echo -e "${CYAN}$(tree -d)"
+echo -e "${CYAN}$(tree -d -I *otus*)"
 
 echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}Running tests ..."
@@ -207,6 +208,8 @@ else
   ((failed_tests_count++))
   echo -e "${RED}${test_result}${LIGHTGRAY}"
 fi
+
+ANSIBLE_DEPRECATION_WARNINGS=False
 
 # install external ansible roles
 ((all_tests_count++))
