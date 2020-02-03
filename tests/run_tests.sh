@@ -88,17 +88,17 @@ skipped_tests_count=0
 # packer validate
 for f in $(cd packer && ls *.json)
 do
+  ((all_tests_count++))
   if [ "$f" = "app.json" ] || [ "$f" = "db.json" ]
   then
-    echo -e "${CYAN}packer validate -var-file=packer/variables.json.example packer/${f}${LIGHTGRAY}"
+    echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}packer validate -var-file=packer/variables.json.example packer/${f}${LIGHTGRAY}"
     test_result="$(packer validate -var-file=packer/variables.json.example packer/${f})"
   else
-    echo -e "${CYAN}cd packer && packer validate -var-file=variables.json.example ${f}${LIGHTGRAY}"
+    echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}cd packer && packer validate -var-file=variables.json.example ${f}${LIGHTGRAY}"
     test_result="$(cd packer && packer validate -var-file=variables.json.example ${f})"
   fi
   test_exit_code=$?
 
-  ((all_tests_count++))
   if [ $test_exit_code -eq 0 ]
   then
     ((passed_tests_count++))
@@ -113,17 +113,17 @@ if [ "$f" = "" ]
 then
   ((all_tests_count++))
   ((skipped_tests_count++))
-  echo -e "${CYAN}No packer template found! Skip packer validate${LIGHTGRAY}"
+  echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}No packer template found! Skip packer validate${LIGHTGRAY}"
 fi
 f=""
 
 # terraform validate
-echo -e "${CYAN}cd terraform && cp -f terraform.tfvars.example terraform.tfvars && terraform init -backend=false && terraform validate${LIGHTGRAY}"
+((all_tests_count++))
+echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}cd terraform && cp -f terraform.tfvars.example terraform.tfvars && terraform init -backend=false && terraform validate${LIGHTGRAY}"
 test_result="$(cd terraform && cp -f terraform.tfvars.example terraform.tfvars && terraform init -backend=false && terraform validate)"
 test_exit_code=$?
 rm -f terraform/terraform.tfvars
 
-((all_tests_count++))
 if [ $test_exit_code -eq 0 ]
 then
   ((passed_tests_count++))
@@ -133,12 +133,12 @@ else
   echo -e "${RED}${test_result}${LIGHTGRAY}"
 fi
 
-echo -e "${CYAN}cd terraform/stage && cp -f terraform.tfvars.example terraform.tfvars && terraform init -backend=false && terraform validate${LIGHTGRAY}"
+((all_tests_count++))
+echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}cd terraform/stage && cp -f terraform.tfvars.example terraform.tfvars && terraform init -backend=false && terraform validate${LIGHTGRAY}"
 test_result="$(cd terraform/stage && cp -f terraform.tfvars.example terraform.tfvars && terraform init -backend=false && terraform validate)"
 test_exit_code=$?
 rm -f terraform/stage/terraform.tfvars
 
-((all_tests_count++))
 if [ $test_exit_code -eq 0 ]
 then
   ((passed_tests_count++))
@@ -148,12 +148,12 @@ else
   echo -e "${RED}${test_result}${LIGHTGRAY}"
 fi
 
-echo -e "${CYAN}cd terraform/prod && cp -f terraform.tfvars.example terraform.tfvars && terraform init -backend=false && terraform validate${LIGHTGRAY}"
+((all_tests_count++))
+echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}cd terraform/prod && cp -f terraform.tfvars.example terraform.tfvars && terraform init -backend=false && terraform validate${LIGHTGRAY}"
 test_result="$(cd terraform/prod && cp -f terraform.tfvars.example terraform.tfvars && terraform init -backend=false && terraform validate)"
 test_exit_code=$?
 rm -f terraform/prod/terraform.tfvars
 
-((all_tests_count++))
 if [ $test_exit_code -eq 0 ]
 then
   ((passed_tests_count++))
@@ -164,11 +164,11 @@ else
 fi
 
 # tflint
-echo -e "${CYAN}cd terraform && tflint --var-file=terraform.tfvars.example --module${LIGHTGRAY}"
+((all_tests_count++))
+echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}cd terraform && tflint --var-file=terraform.tfvars.example --module${LIGHTGRAY}"
 test_result="$(cd terraform && tflint --var-file=terraform.tfvars.example --module)"
 test_exit_code=$?
 
-((all_tests_count++))
 if [ $test_exit_code -eq 0 ]
 then
   ((passed_tests_count++))
@@ -178,11 +178,11 @@ else
   echo -e "${RED}${test_result}${LIGHTGRAY}"
 fi
 
-echo -e "${CYAN}cd terraform/stage && tflint --var-file=terraform.tfvars.example --module${LIGHTGRAY}"
+((all_tests_count++))
+echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}cd terraform/stage && tflint --var-file=terraform.tfvars.example --module${LIGHTGRAY}"
 test_result="$(cd terraform/stage && tflint --var-file=terraform.tfvars.example --module)"
 test_exit_code=$?
 
-((all_tests_count++))
 if [ $test_exit_code -eq 0 ]
 then
   ((passed_tests_count++))
@@ -192,11 +192,11 @@ else
   echo -e "${RED}${test_result}${LIGHTGRAY}"
 fi
 
-echo -e "${CYAN}cd terraform/prod && tflint --var-file=terraform.tfvars.example --module${LIGHTGRAY}"
+((all_tests_count++))
+echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}cd terraform/prod && tflint --var-file=terraform.tfvars.example --module${LIGHTGRAY}"
 test_result="$(cd terraform/prod && tflint --var-file=terraform.tfvars.example --module)"
 test_exit_code=$?
 
-((all_tests_count++))
 if [ $test_exit_code -eq 0 ]
 then
   ((passed_tests_count++))
@@ -207,11 +207,11 @@ else
 fi
 
 # install external ansible roles
-echo -e "${CYAN}cd ansible && ansible-galaxy install -r environments/stage/requirements.yml${LIGHTGRAY}"
+((all_tests_count++))
+echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}cd ansible && ansible-galaxy install -r environments/stage/requirements.yml${LIGHTGRAY}"
 test_result="$(cd ansible && ansible-galaxy install -r environments/stage/requirements.yml)"
 test_exit_code=$?
 
-((all_tests_count++))
 if [ $test_exit_code -eq 0 ]
 then
   ((passed_tests_count++))
@@ -224,11 +224,11 @@ fi
 # ansible-playbook --syntax-check
 for f in $(cd ansible/playbooks && ls *.yml)
 do
-  echo -e "${CYAN}ANSIBLE_ROLES_PATH=ansible/roles ansible-playbook -i ansible/old/inventory ansible/playbooks/${f} --syntax-check${LIGHTGRAY}"
+  ((all_tests_count++))
+  echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}ANSIBLE_ROLES_PATH=ansible/roles ansible-playbook -i ansible/old/inventory ansible/playbooks/${f} --syntax-check${LIGHTGRAY}"
   test_result="$(ANSIBLE_ROLES_PATH=ansible/roles ansible-playbook -i ansible/old/inventory ansible/playbooks/${f} --syntax-check)"
   test_exit_code=$?
 
-  ((all_tests_count++))
   if [ $test_exit_code -eq 0 ]
   then
     ((passed_tests_count++))
@@ -243,18 +243,18 @@ if [ "$f" = "" ]
 then
   ((all_tests_count++))
   ((skipped_tests_count++))
-  echo -e "${CYAN}No ansible playbooks found! Skip ansible-playbook --syntax-check${LIGHTGRAY}"
+  echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}No ansible playbooks found! Skip ansible-playbook --syntax-check${LIGHTGRAY}"
 fi
 f=""
 
 # ansible-lint
 for f in $(cd ansible/playbooks && ls *.yml)
 do
-  echo -e "${CYAN}cd ansible && ansible-lint playbooks/${f} --exclude=roles/jdauphant.nginx${LIGHTGRAY}"
+  ((all_tests_count++))
+  echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}cd ansible && ansible-lint playbooks/${f} --exclude=roles/jdauphant.nginx${LIGHTGRAY}"
   test_result="$(cd ansible && ansible-lint playbooks/${f} --exclude=roles/jdauphant.nginx)"
   test_exit_code=$?
 
-  ((all_tests_count++))
   if [ $test_exit_code -eq 0 ]
   then
     ((passed_tests_count++))
@@ -269,7 +269,7 @@ if [ "$f" = "" ]
 then
   ((all_tests_count++))
   ((skipped_tests_count++))
-  echo -e "${CYAN}No ansible playbooks found! Skip ansible-lint${LIGHTGRAY}"
+  echo -e "${DARKYELLOW}(Test ${all_tests_count}): ${CYAN}No ansible playbooks found! Skip ansible-lint${LIGHTGRAY}"
 fi
 f=""
 
