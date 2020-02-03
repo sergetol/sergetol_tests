@@ -7,10 +7,10 @@ DARKYELLOW="\033[0;33m"
 CYAN="\033[0;36m"
 LIGHTGRAY="\033[0;37m"
 
-sudo apt-get update -y
-sudo apt-get dist-upgrade -y
 python --version
 pip --version
+
+sudo apt-get update
 sudo apt-get install -y tree
 
 echo -e "${DARKYELLOW}$(pwd) directory tree:"
@@ -28,9 +28,13 @@ then
   exit 0
 fi
 
+sudo apt-get upgrade -y
+
 sudo apt-get install -y curl unzip python-pip
-pyton --version
 sudo -H pip install --upgrade pip
+
+python --version
+pip --version
 
 PACKER_VERSION=1.5.1
 TERRAFORM_VERSION=0.12.20
@@ -47,22 +51,22 @@ whereis packer
 curl -O https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
   unzip -o packer_${PACKER_VERSION}_linux_amd64.zip && \
   rm -f packer_${PACKER_VERSION}_linux_amd64.zip && \
-  sudo mv -f packer /usr/bin && \
-  sudo chmod +x /usr/bin/packer
+  sudo mv -f packer /usr/local/bin && \
+  sudo chmod +x /usr/local/bin/packer
 
 # Install terraform
 curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
   unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
   rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-  sudo mv -f terraform /usr/bin && \
-  sudo chmod +x /usr/bin/terraform
+  sudo mv -f terraform /usr/local/bin && \
+  sudo chmod +x /usr/local/bin/terraform
 
 # Install tflint
 curl -OL https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip && \
   unzip -o tflint_linux_amd64.zip && \
   rm -r tflint_linux_amd64.zip && \
-  sudo mv -f tflint /usr/bin && \
-  sudo chmod +x /usr/bin/tflint
+  sudo mv -f tflint /usr/local/bin && \
+  sudo chmod +x /usr/local/bin/tflint
 
 cd ..
 rm -rf _tmp
