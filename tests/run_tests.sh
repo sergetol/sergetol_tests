@@ -25,6 +25,9 @@ sudo -H pip install -q --upgrade pip
 python --version
 pip --version
 
+export ANSIBLE_DEPRECATION_WARNINGS=False
+export PYTHONWARNINGS="ignore::SNIMissingWarning:InsecurePlatformWarning:CryptographyDeprecationWarning"
+
 PACKER_VERSION=1.5.1
 TERRAFORM_VERSION=0.12.20
 TFLINT_VERSION=0.14.0
@@ -60,10 +63,6 @@ rm -rf _tmp
 
 # Install ansible and ansible-lint
 sudo -H pip install -q ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
-
-sudo rm -rf ansible/roles/jdauphant.nginx
-export ANSIBLE_DEPRECATION_WARNINGS=False
-export PYTHONWARNINGS="ignore::DeprecationWarning"
 
 echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}Version information:"
