@@ -7,8 +7,11 @@ DARKYELLOW="\033[0;33m"
 CYAN="\033[0;36m"
 LIGHTGRAY="\033[0;37m"
 
-sudo apt-get update -qq > /dev/null
-sudo apt-get install -yqq tree > /dev/null
+sudo apt-get update -y
+sudo apt-get dist-upgrade -y
+python --version
+pip --version
+sudo apt-get install -y tree
 
 echo -e "${DARKYELLOW}$(pwd) directory tree:"
 echo -e "${CYAN}$(tree -d)"
@@ -25,8 +28,9 @@ then
   exit 0
 fi
 
-sudo apt-get install -yqq curl unzip python-pip > /dev/null
-pip install -q --upgrade pip
+sudo apt-get install -y curl unzip python-pip
+pyton --version
+sudo -H pip install --upgrade pip
 
 PACKER_VERSION=1.5.1
 TERRAFORM_VERSION=0.12.20
@@ -37,23 +41,25 @@ ANSIBLE_LINT_VERSION=4.2.0
 mkdir _tmp
 cd _tmp
 
+whereis packer
+
 # Install packer
-curl -OsS https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
-  unzip -oq packer_${PACKER_VERSION}_linux_amd64.zip && \
+curl -O https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+  unzip -o packer_${PACKER_VERSION}_linux_amd64.zip && \
   rm -f packer_${PACKER_VERSION}_linux_amd64.zip && \
   sudo mv -f packer /usr/bin && \
   sudo chmod +x /usr/bin/packer
 
 # Install terraform
-curl -OsS https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-  unzip -oq terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+  unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
   rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
   sudo mv -f terraform /usr/bin && \
   sudo chmod +x /usr/bin/terraform
 
 # Install tflint
-curl -OLsS https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip && \
-  unzip -oq tflint_linux_amd64.zip && \
+curl -OL https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip && \
+  unzip -o tflint_linux_amd64.zip && \
   rm -r tflint_linux_amd64.zip && \
   sudo mv -f tflint /usr/bin && \
   sudo chmod +x /usr/bin/tflint
@@ -62,7 +68,9 @@ cd ..
 rm -rf _tmp
 
 # Install ansible and ansible-lint
-sudo -H pip install -q ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
+sudo -H pip install ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
+
+echo "${DARKYELLOW}Installation complete"
 
 echo -e "${DARKYELLOW}Version information:"
 echo -e "${CYAN}$(packer version)"
