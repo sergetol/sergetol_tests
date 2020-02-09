@@ -20,15 +20,15 @@ fi
 
 sudo apt-get update -qq > /dev/null
 sudo apt-get upgrade -yqq > /dev/null
-sudo apt-get install -yqq tree curl unzip python-pip > /dev/null
-sudo -H python -m pip install -q --upgrade pip
+sudo apt-get install -yqq tree curl unzip grep python-pip > /dev/null
+sudo -H python -m pip install -q --upgrade pip setuptools wheel
 echo "$(python --version) ($(which python))"
 python -m pip --version
 PYTHON_COMMAND="python"
 
 echo "Trying install default python3 ..."
 sudo apt-get install -yqq python3 python3-pip > /dev/null
-sudo -H python3 -m pip install -q --upgrade pip
+sudo -H python3 -m pip install -q --upgrade pip setuptools wheel
 echo "$(python3 --version) ($(which python3))"
 python3 -m pip --version
 
@@ -46,7 +46,8 @@ else
   sudo add-apt-repository -y ppa:deadsnakes/ppa
   sudo apt-get update -qq > /dev/null
   sudo apt-get install -yqq python3.6 > /dev/null
-  sudo -H python3.6 -m pip install -q --upgrade pip
+  curl -sS https://bootstrap.pypa.io/get-pip.py | sudo -H python3.6
+  sudo -H python3.6 -m pip install -q --upgrade pip setuptools wheel
   echo "$(python3.6 --version) ($(which python3.6))"
   python3.6 -m pip --version
   PYTHON_COMMAND="python3.6"
