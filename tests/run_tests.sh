@@ -46,8 +46,13 @@ else
   sudo add-apt-repository -y ppa:deadsnakes/ppa
   sudo apt-get update -qq > /dev/null
   sudo apt-get install -yqq python3.6 > /dev/null
-  curl -sS https://bootstrap.pypa.io/get-pip.py | sudo -H python3.6
-  sudo -H python3.6 -m pip install -q --upgrade pip setuptools wheel
+  echo "Installing pip ..."
+  mkdir -p _tmp && cd _tmp
+  curl -OsS https://bootstrap.pypa.io/get-pip.py && sudo -H python3.6 get-pip.py --prefix=/usr/local/
+  cd .. && rm -rf _tmp
+  echo "Upgrading pip ..."
+  sudo -H python3.6 -m pip install --prefix /usr/local/ --upgrade pip setuptools wheel
+  echo "... done (installing python3.6)"
   echo "$(python3.6 --version) ($(which python3.6))"
   python3.6 -m pip --version
   PYTHON_COMMAND="python3.6"
@@ -59,8 +64,7 @@ TFLINT_VERSION=0.14.0
 ANSIBLE_VERSION=2.9.4
 ANSIBLE_LINT_VERSION=4.2.0
 
-mkdir -p _tmp
-cd _tmp
+mkdir -p _tmp && cd _tmp
 
 # Install packer
 curl -OsS https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
@@ -83,8 +87,7 @@ curl -OLsS https://github.com/terraform-linters/tflint/releases/download/v${TFLI
   sudo mv -f tflint /usr/local/bin && \
   sudo chmod +x /usr/local/bin/tflint
 
-cd ..
-rm -rf _tmp
+cd .. && rm -rf _tmp
 
 # Install ansible and ansible-lint
 sudo -H ${PYTHON_COMMAND} -m pip install -q ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
