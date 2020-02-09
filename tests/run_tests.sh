@@ -24,13 +24,12 @@ sudo apt-get install -yqq tree curl unzip grep python-pip > /dev/null
 sudo -H python -m pip install -q --upgrade pip setuptools wheel
 echo "$(python --version) ($(which python))"
 python -m pip --version
+whereis pip
 PYTHON_COMMAND="python"
 
 echo "Trying install default python3 ..."
-sudo apt-get install -y python3 python3-pip
-sudo -H python3 -m pip install --upgrade pip setuptools wheel
+sudo apt-get install -yqq python3 > /dev/null
 echo "$(python3 --version) ($(which python3))"
-python3 -m pip --version
 
 PYTHON3_EXISTS="$(which python3)"
 PYTHON3_MINOR_VERSION=0
@@ -38,23 +37,31 @@ if [ "$PYTHON3_EXISTS" != "" ]
 then
   PYTHON3_MINOR_VERSION="$(python3 --version | grep -o -E '\.[[:digit:]]\.' | grep -o -E '[[:digit:]]')"
 fi
-if [ "$PYTHON3_EXISTS" != "" ] && [ $PYTHON3_MINOR_VERSION -ge 5 ]
+if [ "$PYTHON3_EXISTS" != "" ] && [ $PYTHON3_MINOR_VERSION -ge 6 ]
 then
+  echo "Installing pip3 ..."
+  sudo apt-get install -yqq python3-pip > /dev/null
+  python3 -m pip --version
+  whereis pip3
+  echo "Upgrading pip3 ..."
+  sudo -H python3 -m pip install -q --upgrade pip setuptools wheel
+  python3 -m pip --version
+  whereis pip3
   PYTHON_COMMAND="python3"
 else
   echo "Installing python3.6 ..."
   sudo add-apt-repository -y ppa:deadsnakes/ppa
   sudo apt-get update -qq > /dev/null
-  sudo apt-get install -y python3.6 > /dev/null
-  echo "Installing pip ..."
-  mkdir -p _tmp && cd _tmp
-  curl -OsS https://bootstrap.pypa.io/get-pip.py && python3.6 get-pip.py --prefix=/usr/local/
-  cd .. && rm -rf _tmp
-  echo "Upgrading pip ..."
-  python3.6 -m pip install --prefix /usr/local/ --upgrade pip setuptools wheel
-  echo "... done (installing python3.6)"
+  sudo apt-get install -yqq python3.6 > /dev/null
   echo "$(python3.6 --version) ($(which python3.6))"
+  echo "Installing pip3 ..."
+  curl -sS https://bootstrap.pypa.io/get-pip.py | sudo -H python3.6
   python3.6 -m pip --version
+  whereis pip3
+  echo "Upgrading pip3 ..."
+  sudo -H python3.6 -m pip install --upgrade pip setuptools wheel
+  python3.6 -m pip --version
+  whereis pip3
   PYTHON_COMMAND="python3.6"
 fi
 
