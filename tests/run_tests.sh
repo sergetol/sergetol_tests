@@ -21,12 +21,36 @@ fi
 sudo apt-get update -qq > /dev/null
 sudo apt-get upgrade -yqq > /dev/null
 sudo apt-get install -yqq tree curl unzip python-pip > /dev/null
-sudo -H pip install -q --upgrade pip
-python --version
-pip --version
+sudo -H python -m pip install -q --upgrade pip
+echo "$(python --version) ($(which python))"
+python -m pip --version
+PYTHON_COMMAND="python"
 
-export ANSIBLE_DEPRECATION_WARNINGS=False
-export PYTHONWARNINGS="ignore::SNIMissingWarning:InsecurePlatformWarning:CryptographyDeprecationWarning"
+echo "Trying install default python3 ..."
+sudo apt-get install -yqq python3 python3-pip > /dev/null
+sudo -H python3 -m pip install -q --upgrade pip
+echo "$(python3 --version) ($(which python3))"
+python3 -m pip --version
+
+PYTHON3_EXISTS="$(which python3)"
+PYTHON3_MINOR_VERSION=0
+if [ "$PYTHON3_EXISTS" != "" ]
+then
+  PYTHON3_MINOR_VERSION="$(python3 --version | grep -o -E '\.[[:digit:]]\.' | grep -o -E '[[:digit:]]')"
+fi
+if [ "$PYTHON3_EXISTS" != "" ] && [ $PYTHON3_MINOR_VERSION -ge 5 ]
+then
+  PYTHON_COMMAND="python3"
+else
+  echo "Installing python3.6 ..."
+  sudo add-apt-repository -y ppa:deadsnakes/ppa
+  sudo apt-get update -qq > /dev/null
+  sudo apt-get install -yqq python3.6 > /dev/null
+  sudo -H python3.6 -m pip install -q --upgrade pip
+  echo "$(python3.6 --version) ($(which python3.6))"
+  python3.6 -m pip --version
+  PYTHON_COMMAND="python3.6"
+fi
 
 PACKER_VERSION=1.5.1
 TERRAFORM_VERSION=0.12.20
@@ -34,7 +58,7 @@ TFLINT_VERSION=0.14.0
 ANSIBLE_VERSION=2.9.4
 ANSIBLE_LINT_VERSION=4.2.0
 
-mkdir _tmp
+mkdir -p _tmp
 cd _tmp
 
 # Install packer
@@ -62,7 +86,7 @@ cd ..
 rm -rf _tmp
 
 # Install ansible and ansible-lint
-sudo -H pip install -q ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
+sudo -H ${PYTHON_COMMAND} -m pip install -q ansible==${ANSIBLE_VERSION} ansible-lint==${ANSIBLE_LINT_VERSION}
 
 echo -e "${LIGHTGRAY}"
 echo -e "${DARKYELLOW}Version information:"
