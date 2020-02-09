@@ -27,8 +27,8 @@ python -m pip --version
 PYTHON_COMMAND="python"
 
 echo "Trying install default python3 ..."
-sudo apt-get install -yqq python3 python3-pip > /dev/null
-sudo -H python3 -m pip install -q --upgrade pip setuptools wheel
+sudo apt-get install -y python3 python3-pip
+sudo -H python3 -m pip install --upgrade pip setuptools wheel
 echo "$(python3 --version) ($(which python3))"
 python3 -m pip --version
 
@@ -45,13 +45,13 @@ else
   echo "Installing python3.6 ..."
   sudo add-apt-repository -y ppa:deadsnakes/ppa
   sudo apt-get update -qq > /dev/null
-  sudo apt-get install -yqq python3.6 > /dev/null
+  sudo apt-get install -y python3.6 > /dev/null
   echo "Installing pip ..."
   mkdir -p _tmp && cd _tmp
-  curl -OsS https://bootstrap.pypa.io/get-pip.py && sudo -H python3.6 get-pip.py --prefix=/usr/local/
+  curl -OsS https://bootstrap.pypa.io/get-pip.py && python3.6 get-pip.py --prefix=/usr/local/
   cd .. && rm -rf _tmp
   echo "Upgrading pip ..."
-  sudo -H python3.6 -m pip install --prefix /usr/local/ --upgrade pip setuptools wheel
+  python3.6 -m pip install --prefix /usr/local/ --upgrade pip setuptools wheel
   echo "... done (installing python3.6)"
   echo "$(python3.6 --version) ($(which python3.6))"
   python3.6 -m pip --version
