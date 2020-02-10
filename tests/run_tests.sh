@@ -10,7 +10,7 @@ LIGHTGRAY="\033[0;37m"
 BRANCH="${TRAVIS_BRANCH:-master}"
 BRANCH_TO_TEST="${BRANCH_TO_TEST:-master}"
 # debug:
-# BRANCH_TO_TEST=$BRANCH
+#BRANCH_TO_TEST=$BRANCH
 
 if [ "$BRANCH" != "$BRANCH_TO_TEST" ]
 then
@@ -20,12 +20,15 @@ fi
 
 sudo apt-get update -qq > /dev/null
 sudo apt-get upgrade -yqq > /dev/null
-sudo apt-get install -yqq tree curl unzip grep python-pip > /dev/null
-sudo -H python -m pip install -q --upgrade pip setuptools wheel
-echo "$(python --version) ($(which python))"
-python -m pip --version
-whereis pip
-PYTHON_COMMAND="python"
+sudo apt-get install -yqq tree curl unzip grep > /dev/null
+
+# Install python2 pip
+#sudo apt-get install -yqq python-pip > /dev/null
+#sudo -H python -m pip install -q --upgrade pip setuptools wheel
+#echo "$(python --version) ($(which python))"
+#python -m pip --version
+#whereis pip
+#PYTHON_COMMAND="python"
 
 echo "Trying install default python3 ..."
 sudo apt-get install -yqq python3 > /dev/null
@@ -35,7 +38,8 @@ PYTHON3_EXISTS="$(which python3)"
 PYTHON3_MINOR_VERSION=0
 if [ "$PYTHON3_EXISTS" != "" ]
 then
-  PYTHON3_MINOR_VERSION="$(python3 --version | grep -o -E '\.[[:digit:]]\.' | grep -o -E '[[:digit:]]')"
+  PYTHON3_MINOR_VERSION="$(python3 --version | grep -o -E '\.[[:digit:]]{1,2}\.' | grep -o -E '[[:digit:]]{1,2}')"
+  PYTHON3_MINOR_VERSION="${PYTHON3_MINOR_VERSION:-0}"
 fi
 if [ "$PYTHON3_EXISTS" != "" ] && [ $PYTHON3_MINOR_VERSION -ge 6 ]
 then
